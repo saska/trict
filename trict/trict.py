@@ -59,7 +59,7 @@ class Trict(UserDict):
         yield from traverse(self.data, *args, **kwargs)
 
     def map_leaves(self, callable_):
-        for k, v in self.traverse():
+        for k, v in self.leaves():
             self.__setitem__(k, callable_(v))
 
     def leaves(self):
