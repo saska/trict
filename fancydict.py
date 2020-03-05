@@ -90,9 +90,6 @@ class FancyDict(UserDict):
             {
                 key: value from self if any mapping matched
             }
-
-        Useful when:
-            - 
         """
         ret_d = {}
         return {k: self.get_by_list(v) for k, v in mapper_dict.items()}
