@@ -3,7 +3,7 @@ from collections import UserDict
 from functools import reduce
 
 from .util import (flatten_dict, iter_keys, recursive_delete, recursive_set,
-                  traverse)
+                  leaves)
 
 
 class Trict(UserDict):
@@ -58,6 +58,10 @@ class Trict(UserDict):
     def map_leaves(self, callable_):
         for k, v in self.traverse():
             self.__setitem__(k, callable_(v))
+
+    def leaves(self):
+        """See util.leaves"""
+        yield from leaves(self.data)
 
     def get_by_list(self, keys):
         """
