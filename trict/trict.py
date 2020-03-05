@@ -38,6 +38,10 @@ class Trict(UserDict):
         key = self.key_to_list(key)
         recursive_delete(self.data, key)
 
+    def __contains__(self, key):
+        key = self.key_to_list(key)
+        return key in self.traverse(keys_only=True)
+
     def key_to_list(self, key):
         if type(key) is not list:
             if type(key) is not str:
@@ -45,15 +49,14 @@ class Trict(UserDict):
             key = key.split(self.key_sep)
         return key
 
-    def flatten(self, max_depth=sys.getrecursionlimit()):
+    def flatten(self):
         """See util.flatten_dict"""
         sep = '.' if self.key_sep is None else self.key_sep
-        return flatten_dict(self.data, max_depth=max_depth, sep=sep)
+        return flatten_dict(self.data, sep=sep)
 
-    def traverse(self):
+    def traverse(self, *args, **kwargs):
         """See util.traverse"""
-        sep = '.' if self.key_sep is None else self.key_sep
-        yield from traverse(self.data, sep=sep)
+        yield from traverse(self.data, *args, **kwargs)
 
     def map_leaves(self, callable_):
         for k, v in self.traverse():
