@@ -5,7 +5,9 @@
 
 Python dictionary with extra stuff.
 
-Starting off, if you're seeing this, please give feedback! You can install with `pip install trict` or `conda install -c saska trict` (working on conda-forge). Doesn't currently have any dependencies, only works with python>3.6 strictly because I like f-strings which I can reformat out if someone needs this to work on something else.
+Starting off, if you're seeing this, please give feedback! 
+
+You can install with `pip install trict` or `conda install -c saska trict` (working on conda-forge). Doesn't currently have any dependencies, only works with python>3.6 strictly because I like f-strings which I can reformat out if someone needs this to work on something else.
 
 Tricktionaries (subclass of collections.UserDict) are dictionary-type things that have recursive (and other) helper things I've previously needed. Here's how they work:
 
@@ -30,8 +32,10 @@ You can then perform all sorts of cool operations with it, like period-separated
 >>> t['user.information.attribute']
 'infonugget'
 ```
+Initializing `Trict` with `strict_get=False` will throw all your `KeyError` related worries out the window - use with care, `__get__` will happily return `None` for you with any non-found keys.
 
-The Trict will create intermediary keys for you:
+When setting, the Trict will create intermediary keys for you:
+
 ```python
 >>> t['user.newinformation.newattribute'] = 'new'
 >>> t['user.newinformation.newattribute']
@@ -120,3 +124,5 @@ If you're more of the "I need to make sure my API can handle most anything throw
   }
 }
 ```
+
+Similar functionality can be found in `get_by_list` which also takes [str or list] and returns val if any of those keys exists.
