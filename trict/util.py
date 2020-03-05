@@ -75,7 +75,7 @@ def flatten_dict(d, sep='.', check_keys=True):
         ret_d[sep.join(k)] = v 
     return ret_d
 
-def iter_keys(d, whole_paths=False):
+def iter_keys(d):
     """Recursively iterate through all keys at any level.
 
     Example usage:
@@ -113,9 +113,9 @@ def leaves(d, prev=[]):
             }
         >>> [l for l in leaves(d)]
         [
-            ('user.information.attribute', 'infonugget'), 
-            ('user.information.another_attribute', 'secondnugget'), 
-            ('user.moreinformation', 'extranugget')
+            (['user', 'information', 'attribute'], 'infonugget'), 
+            (['user', 'information', 'another_attribute'], 'secondnugget'), 
+            (['user', 'moreinformation'], 'extranugget')
         ]
     """
     for k, v in d.items():
@@ -125,11 +125,13 @@ def leaves(d, prev=[]):
         else:
             yield new_k, v
 
-def traverse(d, prev=[]):
+def traverse(d, keys_only=False, prev=[]):
     """Traverses through dictionary.
 
     Yields 2-tuples of (key path as list, value)
     for each node.
+
+    If keys_only=True, only yields keys.
 
     Example usage:
         >>> d = {
@@ -168,6 +170,9 @@ def traverse(d, prev=[]):
     """
     for k, v in d.items():
         new_k = [k] if prev == [] else prev + [k]
-        yield new_k, v
+        if keys_only:
+            yield new_k
+        else:
+            yield new_k, v
         if isinstance(v, dict):
-            yield from traverse(v, prev=new_k)
+            yield from traverse(v, keys_only=keys_only, prev=new_k)
