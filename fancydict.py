@@ -1,7 +1,7 @@
 import sys
 from functools import reduce
 from collections import UserDict
-from util import recursive_set, flatten_dict, iter_keys, traverse
+from util import recursive_set, recursive_delete, flatten_dict, iter_keys, traverse
 
 class FancyDict(UserDict):
     def __init__(self, initialdata, key_sep='.', strict_get=True):
@@ -11,13 +11,11 @@ class FancyDict(UserDict):
             if key_sep in k:
                 raise ValueError(f'key_sep found in key {k}')
         self.key_sep = key_sep
+        self.strict_get = strict_get
         super().__init__(initialdata)
 
     def __getitem__(self, key):
-        if type(key) is not list:
-            if type(key) is not str:
-                raise TypeError('Key is not list or str')
-            key = key.split(self.key_sep)
+        key = self.key_to_list(key)
         try:
             val = reduce(lambda x, y: x[y], key, self.data)
         except KeyError as e:
@@ -28,12 +26,20 @@ class FancyDict(UserDict):
         return val
 
     def __setitem__(self, key, val):
+        key = self.key_to_list(key)
+        recursive_set(self.data, key, val)
+
+    def __delitem__(self, key):
+        key = self.key_to_list(key)
+        recursive_delete(self.data, key)
+
+    def key_to_list(self, key):
         if type(key) is not list:
             if type(key) is not str:
                 raise TypeError('Key is not list or str')
             key = key.split(self.key_sep)
-        recursive_set(self.data, key, val)
-    
+        return key
+
     def flatten(self, max_depth=sys.getrecursionlimit()):
         sep = '.' if self.key_sep is None else self.key_sep
         return flatten_dict(self.data, max_depth=max_depth, sep=sep)

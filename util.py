@@ -32,6 +32,12 @@ def recursive_set(d, attr_list, val):
             d[attr_list[0]] = {}
             recursive_set(d[attr_list[0]], attr_list[1:], val)
 
+def recursive_delete(d, attr_list):
+    if len(attr_list) == 1:
+        del d[attr_list[0]]
+    else:
+        root = d[attr_list[0]]
+        recursive_delete(root, attr_list[1:])
 
 def flatten_dict(d, sep='.', max_depth=sys.getrecursionlimit(), prefix='',  level=0):
     """Flatten a dictionary.
