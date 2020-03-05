@@ -89,7 +89,7 @@ def flatten_dict(d, sep='.', max_depth=sys.getrecursionlimit(), prefix='',  leve
 
     return ret_d
 
-def iter_keys(d):
+def iter_keys(d, whole_paths=False):
     """Recursively iterate through all keys at any level.
 
     Example usage:
@@ -110,8 +110,8 @@ def iter_keys(d):
         if isinstance(v, dict):
             yield from iter_keys(v)
 
-def traverse(d, sep='.', prefix=''):
-    """Traverses through dictionary.
+def leaves(d, sep='.', prefix=''):
+    """Returns leaves of dictionary and their keys.
 
     Yields 2-tuples of (sep-separated key path, value).
 
@@ -125,7 +125,7 @@ def traverse(d, sep='.', prefix=''):
                     'moreinformation': 'extranugget'
                 }
             }
-        >>> [k for k in traverse(d)]
+        >>> [l for l in leaves(d)]
         [
             ('user.information.attribute', 'infonugget'), 
             ('user.information.another_attribute', 'secondnugget'), 
@@ -137,6 +137,52 @@ def traverse(d, sep='.', prefix=''):
     for k, v in d.items():
         new_k = k if prefix == '' else sep.join([prefix, k])
         if isinstance(v, dict):
-            yield from traverse(v, prefix=new_k)
+            yield from leaves(v, prefix=new_k)
         else:
             yield new_k, v
+
+def traverse(d, prev=[]):
+    """Traverses through dictionary.
+
+    Yields 2-tuples of (sep-separated key path, value)
+    for each node.
+
+    Example usage:
+        >>> d = {
+                    'user': {
+                        'information': {
+                            'attribute': 'infonugget',
+                            'another_attribute': 'secondnugget'
+                        },
+                        'moreinformation': 'extranugget'
+                    }
+                }
+        >>> [n for n in traverse(d)]
+        [
+            (
+                'user', {
+                    'information': {
+                        'attribute': 'infonugget', 
+                        'another_attribute': 'secondnugget'
+                    }, 
+                    'moreinformation': 'extranugget'}
+            ), (
+                'user.information', {
+                    'attribute': 'infonugget', 
+                    'another_attribute': 'secondnugget'
+                    }
+            ), (
+                'user.information.attribute', 'infonugget'
+            ), (
+                'user.information.another_attribute', 'secondnugget'
+            ), (
+                'user.moreinformation', 'extranugget'
+            )
+        ]
+
+    """
+    for k, v in d.items():
+        new_k = [k] if prev == [] else prev + [k]
+        yield new_k, v
+        if isinstance(v, dict):
+            yield from traverse(v, prev=new_k)
