@@ -71,7 +71,7 @@ def flatten_dict(d, sep='.', check_keys=True):
     ret_d = {}
     for k, v in leaves(d):
         if check_keys and any([sep in subkey for subkey in k]):
-            raise ValueError(f'Separator {sep} found in a subkey in path {k}')
+            raise ValueError(f'Separator "{sep}" found in a subkey in path {k}')
         ret_d[sep.join(k)] = v 
     return ret_d
 
