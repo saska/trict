@@ -2,19 +2,10 @@ import copy
 
 import pytest
 
+from trict.tests.helpers import base_dict, invalid_base_dict
 from trict.util import (flatten_dict, iter_keys, leaves, recursive_delete,
                         recursive_set, traverse)
 
-def base_dict():
-    return {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
 
 def test_recursive_set_sets():
     d = {}
@@ -85,15 +76,7 @@ def test_flatten_dict_flattens():
     assert d == old_d
 
 def test_flatten_dict_throws():
-    d = {
-        'user': {
-            'information': {
-                'attr.ibute': 'infonugget', # Note extra period
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = invalid_base_dict()
     old_d = copy.deepcopy(d)
     with pytest.raises(ValueError, 
         match=r"Separator \".\" found in a subkey in path \['user', 'information', 'attr.ibute'\]"
