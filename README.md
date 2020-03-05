@@ -7,7 +7,7 @@ Python dictionary with extra stuff.
 
 Starting off, if you're seeing this, please give feedback! 
 
-You can install with `pip install trict` or `conda install -c saska trict` (working on conda-forge). Doesn't currently have any dependencies, only works with python>3.6 strictly because I like f-strings which I can reformat out if someone needs this to work on something else.
+You can install with `pip install trict` or `conda install -c saska trict` (working on conda-forge). Doesn't currently have any dependencies (although you'll need `pytest` if you want to run the tests for some reason), only works with python>3.6 strictly because I like f-strings which I can reformat out if someone needs this to work on something else.
 
 Tricktionaries (subclass of collections.UserDict) are dictionary-type things that have recursive (and other) helper things I've previously needed. Here's how they work:
 
