@@ -1,11 +1,17 @@
 
-from distutils.core import setup
+from setuptools import setup
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 setup(
   name = 'trict',
   packages = ['trict'],
-  version = '0.1.0',
+  version = '0.1.1',
   license='MIT',
   description = 'UserDict subclass with extra stuff',
+  long_description=long_description,
+  long_description_content_type='text/markdown',
   author = 'Saska Karsi',
   author_email = 'saska.karsi@gmail.com',
   url = 'https://github.com/saskakarsi/trict',
