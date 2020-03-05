@@ -1,7 +1,10 @@
 import sys
-from functools import reduce
 from collections import UserDict
-from util import recursive_set, recursive_delete, flatten_dict, iter_keys, traverse
+from functools import reduce
+
+from util import (flatten_dict, iter_keys, recursive_delete, recursive_set,
+                  traverse)
+
 
 class Trict(UserDict):
     def __init__(self, initialdata, key_sep='.', strict_get=True):
