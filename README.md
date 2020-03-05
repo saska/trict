@@ -45,7 +45,7 @@ Deleting also works as you'd expect, so you can also `.pop()`. You can also do a
 'secondnugget'
 ```
 
-If you want to flatten your dictionary for a csv export for example (use keys as the header), you can do that.
+If you want to flatten your dictionary for a csv export for example (use keys as the header), you can do that. The constructor arg `key_sep` also affects how keys are formatted here.
 ```python
 >>> t.flatten()
 {
