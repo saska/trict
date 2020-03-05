@@ -7,6 +7,17 @@ from .util import (flatten_dict, iter_keys, recursive_delete, recursive_set,
 
 
 class Trict(UserDict):
+    """Trict (Tricky dict).
+
+    Args:
+        initialdata: dict
+        key_sep: str, used to separate keys when key lists
+            want to be made into single strings
+        strict_get: bool, if True the instance throws
+            KeyError whenever it can't __get__ a key;
+            if False __get__ will instead return None
+    """
+
     def __init__(self, initialdata, key_sep='.', strict_get=True):
         if key_sep is not None and type(key_sep) is not str:
             raise TypeError('key_sep must be str or None')
@@ -105,7 +116,7 @@ class Trict(UserDict):
             mapper_dict:
                 {
                     key: [mapping1, mapping2],
-                    key2: [mapping3, mapping4, ..., mappingN]
+                    key2: [mapping3.submapping4, mapping4, ..., mappingN]
                 }
         returns:
             {
