@@ -2,7 +2,7 @@ import copy
 
 import pytest
 
-from trict.util import (flatten_dict, leaves, recursive_delete, recursive_set,
+from trict import (flatten_dict, leaves, recursive_delete, recursive_set,
                         traverse, iter_keys)
 
 
