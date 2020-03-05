@@ -2,10 +2,19 @@ import copy
 
 import pytest
 
-from trict import (flatten_dict, leaves, recursive_delete, recursive_set,
-                        traverse, iter_keys)
+from trict.util import (flatten_dict, iter_keys, leaves, recursive_delete,
+                        recursive_set, traverse)
 
-
+def base_dict():
+    return {
+        'user': {
+            'information': {
+                'attribute': 'infonugget',
+                'another_attribute': 'secondnugget'
+            },
+            'moreinformation': 'extranugget'
+        }
+    }
 
 def test_recursive_set_sets():
     d = {}
@@ -39,15 +48,7 @@ def test_recursive_set_sets():
     }
 
 def test_recursive_delete_dels():
-    d = {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = base_dict()
     recursive_delete(d, ['user', 'information', 'attribute'])
     assert d == {
         'user': {
@@ -66,15 +67,7 @@ def test_recursive_delete_dels():
     }
 
 def test_recursive_delete_throws():
-    d = {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = base_dict()
     recursive_delete(d, ['user', 'information', 'attribute'])
     old_d = copy.deepcopy(d)
     with pytest.raises(KeyError):
@@ -82,15 +75,7 @@ def test_recursive_delete_throws():
     assert d == old_d
 
 def test_flatten_dict_flattens():
-    d = {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = base_dict()
     old_d = copy.deepcopy(d)
     assert flatten_dict(d) == {
             'user.information.attribute': 'infonugget',
@@ -103,7 +88,7 @@ def test_flatten_dict_throws():
     d = {
         'user': {
             'information': {
-                'attr.ibute': 'infonugget', # Extra period
+                'attr.ibute': 'infonugget', # Note extra period
                 'another_attribute': 'secondnugget'
             },
             'moreinformation': 'extranugget'
@@ -117,15 +102,7 @@ def test_flatten_dict_throws():
     assert d == old_d
 
 def test_traverse():
-    d = {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = base_dict()
     old_d = copy.deepcopy(d)
     assert [n for n in traverse(d)] == [
             (
@@ -160,15 +137,7 @@ def test_traverse():
     assert d == old_d
 
 def test_leaves():
-    d = {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = base_dict()
     old_d = copy.deepcopy(d)
     assert [l for l in leaves(d)] == [
         (['user', 'information', 'attribute'], 'infonugget'), 
@@ -178,15 +147,7 @@ def test_leaves():
     assert d == old_d
 
 def test_iter_keys():
-    d = {
-        'user': {
-            'information': {
-                'attribute': 'infonugget',
-                'another_attribute': 'secondnugget'
-            },
-            'moreinformation': 'extranugget'
-        }
-    }
+    d = base_dict()
     assert [k for k in iter_keys(d)] == [
         'user', 
         'information', 
