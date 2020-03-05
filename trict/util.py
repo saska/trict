@@ -39,20 +39,17 @@ def recursive_delete(d, attr_list):
         root = d[attr_list[0]]
         recursive_delete(root, attr_list[1:])
 
-def flatten_dict(d, sep='.', max_depth=sys.getrecursionlimit(), prefix='',  level=0):
+def flatten_dict(d, sep='.', check_keys=True):
     """Flatten a dictionary.
-    
+
     Args:
         d:
             dict, dictionary to flatten
         sep:
             str, separator character(s) in keys
-        max_depth:
-            int, maximum recursion depth
-        prefix:
-            Prefix to prepend to key, used in recursion
-        level:
-            Level of recursion, used in recursion
+        check_keys:
+            bool, if True will throw if a key in
+            d already contains sep
 
     Example usage:
         >>> d = {
@@ -71,22 +68,11 @@ def flatten_dict(d, sep='.', max_depth=sys.getrecursionlimit(), prefix='',  leve
             'user.moreinformation': 'extranugget'
         }
     """
-    ret_d = copy.deepcopy(d)
-    for k, v in d.items():
-        if not isinstance(k, str):
-            k = str(k)
-            if sep in k:
-                raise ValueError(f'String representation "{k}" contains sep "{sep}"')
-        new_k = k if level == 0 else sep.join([prefix, k])
-        if isinstance(v, dict) and (level < max_depth):
-            v = ret_d.pop(k)
-            ret_d.update(flatten_dict(v, sep, max_depth, new_k, level + 1))
-        else:
-            # if non-dict v at top level no need to do anything
-            if level != 0:
-                v = ret_d.pop(k)
-                ret_d[new_k] = v
-
+    ret_d = {}
+    for k, v in leaves(d):
+        if check_keys and any([sep in subkey for subkey in k]):
+            raise ValueError(f'Separator {sep} found in a subkey in path {k}')
+        ret_d[sep.join(k)] = v 
     return ret_d
 
 def iter_keys(d, whole_paths=False):
@@ -110,10 +96,10 @@ def iter_keys(d, whole_paths=False):
         if isinstance(v, dict):
             yield from iter_keys(v)
 
-def leaves(d, sep='.', prefix=''):
+def leaves(d, prev=[]):
     """Returns leaves of dictionary and their keys.
 
-    Yields 2-tuples of (sep-separated key path, value).
+    Yields 2-tuples of (key path as list, value).
 
     Example usage:
         >>> d = {
@@ -132,19 +118,17 @@ def leaves(d, sep='.', prefix=''):
             ('user.moreinformation', 'extranugget')
         ]
     """
-    # TODO this should probably have a lot of the safety stuff of flatten_dict
-    # Or flatten_dict should have none either, depends on design philosophy I guess
     for k, v in d.items():
-        new_k = k if prefix == '' else sep.join([prefix, k])
+        new_k = [k] if prev == [] else prev + [k]
         if isinstance(v, dict):
-            yield from leaves(v, prefix=new_k)
+            yield from leaves(v, prev=new_k)
         else:
             yield new_k, v
 
 def traverse(d, prev=[]):
     """Traverses through dictionary.
 
-    Yields 2-tuples of (sep-separated key path, value)
+    Yields 2-tuples of (key path as list, value)
     for each node.
 
     Example usage:
@@ -160,23 +144,24 @@ def traverse(d, prev=[]):
         >>> [n for n in traverse(d)]
         [
             (
-                'user', {
+                ['user'], {
                     'information': {
                         'attribute': 'infonugget', 
                         'another_attribute': 'secondnugget'
                     }, 
-                    'moreinformation': 'extranugget'}
+                    'moreinformation': 'extranugget'
+                }
             ), (
-                'user.information', {
+                ['user', 'information'], {
                     'attribute': 'infonugget', 
                     'another_attribute': 'secondnugget'
-                    }
+                }
             ), (
-                'user.information.attribute', 'infonugget'
+                ['user', 'information', 'attribute'], 'infonugget'
             ), (
-                'user.information.another_attribute', 'secondnugget'
+                ['user', 'information', 'another_attribute'], 'secondnugget'
             ), (
-                'user.moreinformation', 'extranugget'
+                ['user', 'moreinformation'], 'extranugget'
             )
         ]
 
