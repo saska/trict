@@ -26,10 +26,12 @@ class FancyDict(UserDict):
         return val
 
     def __setitem__(self, key, val):
+        """See util.recursive_set"""
         key = self.key_to_list(key)
         recursive_set(self.data, key, val)
 
     def __delitem__(self, key):
+        """See util.recursive_delete"""
         key = self.key_to_list(key)
         recursive_delete(self.data, key)
 
@@ -41,10 +43,12 @@ class FancyDict(UserDict):
         return key
 
     def flatten(self, max_depth=sys.getrecursionlimit()):
+        """See util.flatten_dict"""
         sep = '.' if self.key_sep is None else self.key_sep
         return flatten_dict(self.data, max_depth=max_depth, sep=sep)
 
     def traverse(self):
+        """See util.traverse"""
         sep = '.' if self.key_sep is None else self.key_sep
         yield from traverse(self.data, sep=sep)
 
@@ -57,9 +61,14 @@ class FancyDict(UserDict):
         Note that simple lists of indenting keys
         can be fed straight to __getitem__, this is a 
         helper method to try and find any value in a list of keys.
-        Args:
+        
+        args:
             keys:
                 list of str or list
+
+        returns:
+            val from key if any key found or None if none found
+            and self.strict_get == False.
         """
         for k in keys:
             try:
@@ -70,25 +79,27 @@ class FancyDict(UserDict):
             raise KeyError(f'No key in {keys} found')
         return None
 
-    def map_with_mapper_dict(self, mapper_dict):
-        """
-        Since this seems useless-ish I'm going to defend myself.
-        You want to harmonize data from multiple sources with
+    def map_with_dict(self, mapper_dict):
+        """Map values in fancy dict to new dictionary.
+
+        Use-case not clear so will give example:
+            You want to harmonize data from multiple sources with
             different structures but you know the path to the same
             data point in each one. You can create a mapper dict
             for them and just throw whatever documents you receive into 
             a fancydict, then map them to the same format with this method.
-            If you get a new data source, add stuff to your mapping dict.
-            (Making sure they don't have different data points in the same path obv)
+            If you get a new data source, add stuff to your mapping dict
+            (Making sure they don't have different data points in the same path obv).
+
         Args:
             mapper_dict:
                 {
-                    key: [mappings],
-                    key2: [more mappings]
+                    key: [mapping1, mapping2],
+                    key2: [mapping3, mapping4, ..., mappingN]
                 }
         returns:
             {
-                key: value from self if any mapping matched
+                key (from mapper_dict): value (from self) if any mapping matched
             }
         """
         ret_d = {}
