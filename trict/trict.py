@@ -2,7 +2,7 @@ import sys
 from collections import UserDict
 from functools import reduce
 
-from util import (flatten_dict, iter_keys, recursive_delete, recursive_set,
+from .util import (flatten_dict, iter_keys, recursive_delete, recursive_set,
                   traverse)
 
 
