@@ -3,7 +3,7 @@ from functools import reduce
 from collections import UserDict
 from util import recursive_set, recursive_delete, flatten_dict, iter_keys, traverse
 
-class FancyDict(UserDict):
+class Trict(UserDict):
     def __init__(self, initialdata, key_sep='.', strict_get=True):
         if key_sep is not None and type(key_sep) is not str:
             raise TypeError('key_sep must be str or None')
@@ -80,14 +80,14 @@ class FancyDict(UserDict):
         return None
 
     def map_with_dict(self, mapper_dict):
-        """Map values in fancy dict to new dictionary.
+        """Map values in trict to new dictionary.
 
         Use-case not clear so will give example:
             You want to harmonize data from multiple sources with
             different structures but you know the path to the same
             data point in each one. You can create a mapper dict
             for them and just throw whatever documents you receive into 
-            a fancydict, then map them to the same format with this method.
+            a trict, then map them to the same format with this method.
             If you get a new data source, add stuff to your mapping dict
             (Making sure they don't have different data points in the same path obv).
 
