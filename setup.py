@@ -2,12 +2,16 @@
 from setuptools import setup
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
+
+version = '0.1.2'
+
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
+
 setup(
   name = 'trict',
   packages = ['trict'],
-  version = '0.1.1',
+  version = version,
   license='MIT',
   description = 'UserDict subclass with extra stuff',
   long_description=long_description,
@@ -15,7 +19,6 @@ setup(
   author = 'Saska Karsi',
   author_email = 'saska.karsi@gmail.com',
   url = 'https://github.com/saskakarsi/trict',
-  download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',
   keywords = ['mapping', 'map', 'dictionary', 'recursive', 'dict'],
   install_requires=[],
   classifiers=[
