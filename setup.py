@@ -3,7 +3,7 @@ from setuptools import setup
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
 
-version = '0.1.2'
+version = '0.1.3'
 
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
