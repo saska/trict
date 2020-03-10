@@ -16,6 +16,18 @@ class Trict(UserDict):
         strict_get: bool, if True the instance throws
             KeyError whenever it can't __get__ a key;
             if False __get__ will instead return None
+
+    Alternate constructors:
+        Args are only documented if their usage differs
+        from default constructor.
+
+        from_flatten_dict:
+            Args:
+                flat_dict: Flattened dictionary with 
+                    string-separated key paths. If contains
+                    nested dictionaries, those are passed as-is
+                key_sep: Separator, used for parsing the keys
+                    of flat_dict as well as their default usage
     """
 
     def __init__(self, initialdata, key_sep='.', strict_get=True):
@@ -27,6 +39,13 @@ class Trict(UserDict):
         self.key_sep = key_sep
         self.strict_get = strict_get
         super().__init__(initialdata)
+
+    @classmethod
+    def from_flat_dict(cls, flat_dict, key_sep='.', **kwargs):
+        d = {}
+        for k, v in flat_dict.items():
+            recursive_set(d, k.split(key_sep), v)
+        return cls(d, key_sep=key_sep, **kwargs)
 
     def __getitem__(self, key):
         key = self.key_to_list(key)

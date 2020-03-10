@@ -273,3 +273,24 @@ def test_nonstrict_map_with_dict_not_throws():
         'newkey': None,
         'othernewkey': None
     }
+
+def test_from_flat_dict_inits():
+    tr = Trict(base_dict())
+    flat = tr.flatten()
+    new_tr = Trict.from_flat_dict(flat)
+    assert new_tr.data == tr.data
+
+def test_from_flat_dict_with_nested_dict_inits():
+    d = {
+        'info.attribute': {
+            'nugget'
+        }
+    }
+    tr = Trict.from_flat_dict(d)
+    assert tr.data == {
+        'info': {
+            'attribute': {
+                'nugget'
+            }
+        }
+    }
