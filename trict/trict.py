@@ -51,7 +51,7 @@ class Trict(UserDict):
         key = self.key_to_list(key)
         try:
             val = reduce(lambda x, y: x[y], key, self.data)
-        except KeyError as e:
+        except KeyError:
             if self.strict_get:
                 raise KeyError(f"Path not found: {key}")
             else:
@@ -144,5 +144,4 @@ class Trict(UserDict):
                 key (from mapper_dict): value (from self) if any mapping matched
             }
         """
-        ret_d = {}
         return {k: self.get_by_list(v) for k, v in mapper_dict.items()}
