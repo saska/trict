@@ -86,12 +86,6 @@ class Trict(UserDict):
         """See util.traverse"""
         yield from traverse(self.data, *args, **kwargs)
 
-    def map_leaves(self, callable_):
-        # TODO maybe we should actually call this with 
-        # key, value so you could do more cool stuff?
-        for k, v in self.leaves():
-            self.__setitem__(k, callable_(v))
-
     def leaves(self):
         """See util.leaves"""
         yield from leaves(self.data)
@@ -122,6 +116,13 @@ class Trict(UserDict):
         if strict:
             raise KeyError(f'No key in {keys} found')
         return None
+    
+    def map_leaves(self, callable_):
+        # TODO maybe we should actually call this with 
+        # key, value so you could do more cool stuff?
+        for k, v in self.leaves():
+            self.__setitem__(k, callable_(v))
+        return self
 
     def map_with_dict(self, mapper_dict, strict=False):
         """Map values in trict to new dictionary.
@@ -142,7 +143,7 @@ class Trict(UserDict):
                     key: [mapping1, mapping2],
                     key2: [mapping3.submapping4, mapping4, ..., mappingN]
                 }
-                
+
             strict:
                 bool, If True, throws on unfound mapping (passed to self.get_by_list).
                 Default False - returns None instead.
@@ -152,9 +153,10 @@ class Trict(UserDict):
                 key (from mapper_dict): value (from self) if any mapping matched
             }
         """
-        return {
+        self.data = {
             k: self.get_by_list(
                 v, 
                 strict=strict
             ) for k, v in mapper_dict.items()
         }
+        return self
