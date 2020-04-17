@@ -7,13 +7,13 @@ from trict.tests.helpers import base_dict, invalid_base_dict
 
 
 def test_trict_init_inits():
-    tr = Trict(base_dict())
+    tr = Trict(base_dict()) # pylint: disable=unused-variable
 
 def test_trict_init_throws():
     with pytest.raises(ValueError,
         match='key_sep found in key attr.ibute'
         ):
-        tr = Trict(invalid_base_dict())
+        tr = Trict(invalid_base_dict()) # pylint: disable=unused-variable
 
 def test_trict_getter_gets():
     tr = Trict(base_dict())
@@ -32,10 +32,10 @@ def test_strict_trict_getter_throws():
     assert tr.data == old_data
 
 def test_nonstrict_trict_getter_not_throws():
-    tr = Trict(base_dict(), strict_get=False)
+    tr = Trict(base_dict())
     old_data = copy.deepcopy(tr.data)
-    assert tr['user.information.notanattribute'] == None
-    assert tr[['user', 'information', 'notanattribute']] == None
+    assert tr.get('user.information.notanattribute') == None
+    assert tr.get(['user', 'information', 'notanattribute']) == None
     assert tr.data == old_data
 
 def test_trict_setter_sets():
@@ -145,10 +145,10 @@ def test_strict_get_by_list_throws():
             'none.of.these',
             'i.mean.none',
             ['keys', 'exist']
-        ])
+        ], strict=True)
 
 def test_nonstrict_get_by_list_not_throws():
-    tr = Trict(base_dict(), strict_get=False)
+    tr = Trict(base_dict())
     val = tr.get_by_list([
             'none.of.these',
             'i.mean.none',
@@ -253,11 +253,11 @@ def test_map_with_dict_throws():
         ]
     }
     with pytest.raises(KeyError):
-        tr.map_with_dict(mapper)
+        tr.map_with_dict(mapper, strict=True)
 
 
 def test_nonstrict_map_with_dict_not_throws():
-    tr = Trict(base_dict(), strict_get=False)
+    tr = Trict(base_dict())
     mapper = {
         'newkey': [
             ['none', 'of', 'these'],

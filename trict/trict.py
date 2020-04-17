@@ -30,14 +30,13 @@ class Trict(UserDict):
                     of flat_dict as well as their default usage
     """
 
-    def __init__(self, initialdata, key_sep='.', strict_get=True):
+    def __init__(self, initialdata, key_sep='.'):
         if key_sep is not None and type(key_sep) is not str:
             raise TypeError('key_sep must be str or None')
         for k in iter_keys(initialdata):
             if key_sep in k:
                 raise ValueError(f'key_sep found in key {k}')
         self.key_sep = key_sep
-        self.strict_get = strict_get
         super().__init__(initialdata)
 
     @classmethod
@@ -50,13 +49,9 @@ class Trict(UserDict):
     def __getitem__(self, key):
         key = self.key_to_list(key)
         try:
-            val = reduce(lambda x, y: x[y], key, self.data)
+            return reduce(lambda x, y: x[y], key, self.data)
         except KeyError:
-            if self.strict_get:
-                raise KeyError(f"Path not found: {key}")
-            else:
-                val = None
-        return val
+            raise KeyError(f"Path not found: {key}")
 
     def __setitem__(self, key, val):
         """See util.recursive_set"""
@@ -71,6 +66,12 @@ class Trict(UserDict):
     def __contains__(self, key):
         key = self.key_to_list(key)
         return key in self.traverse(keys_only=True)
+
+    def get(self, key, default=None):
+        try:
+            self.__getitem__(key)
+        except KeyError:
+            return default
 
     def key_to_list(self, key):
         if type(key) is not list:
@@ -98,7 +99,7 @@ class Trict(UserDict):
         """See util.leaves"""
         yield from leaves(self.data)
 
-    def get_by_list(self, keys):
+    def get_by_list(self, keys, strict=False):
         """
         Note that simple lists of indenting keys
         can be fed straight to __getitem__, this is a 
@@ -106,22 +107,26 @@ class Trict(UserDict):
         
         args:
             keys:
-                list of str or list
+                list (of str or list), keys to try and find
+
+            strict:
+                bool, if True, throws when no keys are found (default False,
+                returns None instead).
 
         returns:
             val from key if any key found or None if none found
-            and self.strict_get == False.
+            and strict == False.
         """
         for k in keys:
             try:
                 return self.__getitem__(k)
             except KeyError:
                 continue
-        if self.strict_get:
+        if strict:
             raise KeyError(f'No key in {keys} found')
         return None
 
-    def map_with_dict(self, mapper_dict):
+    def map_with_dict(self, mapper_dict, strict=False):
         """Map values in trict to new dictionary.
 
         Use-case not clear so will give example:
@@ -135,13 +140,23 @@ class Trict(UserDict):
 
         Args:
             mapper_dict:
+                dict, 
                 {
                     key: [mapping1, mapping2],
                     key2: [mapping3.submapping4, mapping4, ..., mappingN]
                 }
+            strict:
+                bool, If True, throws on unfound mapping (passed to self.get_by_list).
+                Default False - returns None instead.
+
         returns:
             {
                 key (from mapper_dict): value (from self) if any mapping matched
             }
         """
-        return {k: self.get_by_list(v) for k, v in mapper_dict.items()}
+        return {
+            k: self.get_by_list(
+                v, 
+                strict=strict
+            ) for k, v in mapper_dict.items()
+        }
