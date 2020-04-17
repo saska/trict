@@ -13,9 +13,6 @@ class Trict(UserDict):
         initialdata: dict
         key_sep: str, used to separate keys when key lists
             want to be made into single strings
-        strict_get: bool, if True the instance throws
-            KeyError whenever it can't __get__ a key;
-            if False __get__ will instead return None
 
     Alternate constructors:
         Args are only documented if their usage differs
@@ -145,6 +142,7 @@ class Trict(UserDict):
                     key: [mapping1, mapping2],
                     key2: [mapping3.submapping4, mapping4, ..., mappingN]
                 }
+                
             strict:
                 bool, If True, throws on unfound mapping (passed to self.get_by_list).
                 Default False - returns None instead.
