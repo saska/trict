@@ -32,7 +32,7 @@ You can then perform all sorts of cool operations with it, like period-separated
 >>> t['user.information.attribute']
 'infonugget'
 ```
-Initializing `Trict` with `strict_get=False` will throw all your `KeyError` related worries out the window - use with care, `__get__` will happily return `None` for you with any non-found keys.
+Just like a python dictionary, Trict implements `get(key, default=None)` if you don't like KeyErrors.
 
 When setting, the Trict will create intermediary keys for you:
 
