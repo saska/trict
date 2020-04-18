@@ -284,7 +284,8 @@ def test_from_flat_dict_with_nested_dict_inits():
     d = {
         'info.attribute': {
             'nugget'
-        }
+        },
+        'otherinfo': 'secondnugget'
     }
     tr = Trict.from_flat_dict(d)
     assert tr.data == {
@@ -292,5 +293,6 @@ def test_from_flat_dict_with_nested_dict_inits():
             'attribute': {
                 'nugget'
             }
-        }
+        },
+        'otherinfo': 'secondnugget'
     }
