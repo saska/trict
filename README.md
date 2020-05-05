@@ -42,7 +42,7 @@ When setting, the Trict will create intermediary keys for you:
 'new'
 ```
 
-Deleting also works as you'd expect, so you can also `.pop()`. You can also do any of this using lists as keys.
+Deleting also works as you'd expect, so you can also `.pop()`. You can also do any of this using sequences as keys.
 ```python
 >>> key = ['user', 'information', 'another_attribute']
 >>> t[key]
@@ -100,9 +100,9 @@ You can also map the leaves (the actual values at the end of your dictionary) wi
 }
 ```
 
-All the dictionary helper methods are also provided standalone. There's also an extra one, `iter_keys` that gives you a list of anything that's a key - helpful if there's a bunch of people writing in your codebase and you want to enforce say a regex naming convention on your keys or something.
+All the dictionary helper methods are also provided standalone. There's also an extra one, `iter_keys` that iterates over anything that's a key - helpful if there's a bunch of people writing in your codebase and you want to enforce say a regex naming convention on your keys or something.
 
-If you're more of the "I need to make sure my API can handle most anything thrown at it!" type, you can define a mapper (using {new_key: [str or list]}, try and stick to one, it's prettier, example has both) and throw any dicts you receive into a Tricktionary and map them to the same format. Pretty handy if you need to take in documents in multiple formats, just make sure document x doesn't have different data from document y in the same key path.
+If you're more of the "I need to make sure my API can handle most anything thrown at it!" type, you can define a mapper (using {new_key: [str or sequence]}, try and stick to one, it's prettier, example has both) and throw any dicts you receive into a Tricktionary and map them to the same format. Pretty handy if you need to take in documents in multiple formats, just make sure document x doesn't have different data from document y in the same key path.
 
 ```python
 >>> mapper = {
@@ -125,4 +125,4 @@ If you're more of the "I need to make sure my API can handle most anything throw
 }
 ```
 
-Similar functionality can be found in `get_by_list` which also takes [str or list] and returns val if any of those keys exists.
+Similar functionality can be found in `get_by_list` which also takes [str or sequence] and returns val if any of those keys exists.
