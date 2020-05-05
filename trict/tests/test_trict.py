@@ -296,3 +296,6 @@ def test_from_flat_dict_with_nested_dict_inits():
         },
         'otherinfo': 'secondnugget'
     }
+
+def test_repr():
+    assert Trict({}).__repr__() == 'Trict({})'

@@ -64,6 +64,9 @@ class Trict(UserDict):
         key = self.key_to_list(key)
         return key in self.traverse(keys_only=True)
 
+    def __repr__(self):
+        return f'{type(self).__name__}({super().__repr__()})'
+
     def get(self, key, default=None):
         try:
             self.__getitem__(key)
