@@ -22,6 +22,12 @@ def test_trict_getter_gets():
     assert tr[['user', 'information', 'attribute']] == 'infonugget'
     assert tr.data == old_data
 
+def test_trict_getter_with_tuple_key_gets():
+    tr = Trict(base_dict())
+    old_data = copy.deepcopy(tr.data)
+    assert tr[('user', 'information', 'attribute')] == 'infonugget'
+    assert tr.data == old_data
+
 def test_strict_trict_getter_throws():
     tr = Trict(base_dict())
     old_data = copy.deepcopy(tr.data)
@@ -75,6 +81,22 @@ def test_trict_setter_sets():
         }
     }
 
+def test_trict_setter_with_tuple_key_sets():
+    tr = Trict(base_dict())
+    tr[('user', 'hyperinformation', 'hyperattribute')] = 'hyper'
+    assert tr.data == {
+        'user': {
+            'information': {
+                'attribute': 'infonugget',
+                'another_attribute': 'secondnugget'
+            },
+            'moreinformation': 'extranugget',
+            'hyperinformation': {
+                'hyperattribute': 'hyper',
+            },
+        }
+    }
+
 def test_trict_deleter_deletes():
     tr = Trict(base_dict())
     del tr['user.information']
@@ -114,11 +136,6 @@ def test_trict_contains():
 def test_key_to_list_lists():
     tr = Trict({})
     assert tr.key_to_list('i.j.k') == ['i', 'j', 'k']
-
-def test_key_to_list_throws():
-    tr = Trict({})
-    with pytest.raises(TypeError):
-        tr.key_to_list(1)
 
 def test_get_by_list_finds():
     tr = Trict(base_dict())

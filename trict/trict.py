@@ -74,9 +74,7 @@ class Trict(UserDict):
             return default
 
     def key_to_list(self, key):
-        if type(key) is not list:
-            if type(key) is not str:
-                raise TypeError('Key is not list or str')
+        if type(key) is str:
             key = key.split(self.key_sep)
         return key
 
