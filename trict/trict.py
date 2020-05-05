@@ -44,7 +44,7 @@ class Trict(UserDict):
         return cls(d, key_sep=key_sep, **kwargs)
 
     def __getitem__(self, key):
-        key = self.key_to_list(key)
+        key = self.key_to_seq(key)
         try:
             return reduce(lambda x, y: x[y], key, self.data)
         except KeyError:
@@ -52,16 +52,16 @@ class Trict(UserDict):
 
     def __setitem__(self, key, val):
         """See util.recursive_set"""
-        key = self.key_to_list(key)
+        key = self.key_to_seq(key)
         recursive_set(self.data, key, val)
 
     def __delitem__(self, key):
         """See util.recursive_delete"""
-        key = self.key_to_list(key)
+        key = self.key_to_seq(key)
         recursive_delete(self.data, key)
 
     def __contains__(self, key):
-        key = self.key_to_list(key)
+        key = self.key_to_seq(key)
         return key in self.traverse(keys_only=True)
 
     def __repr__(self):
@@ -73,7 +73,7 @@ class Trict(UserDict):
         except KeyError:
             return default
 
-    def key_to_list(self, key):
+    def key_to_seq(self, key):
         if type(key) is str:
             key = key.split(self.key_sep)
         return key
@@ -91,7 +91,7 @@ class Trict(UserDict):
         """See util.leaves"""
         yield from leaves(self.data)
 
-    def get_by_list(self, keys, strict=False):
+    def get_by_seq(self, keys, strict=False):
         """
         Note that simple lists of indenting keys
         can be fed straight to __getitem__, this is a 
@@ -146,7 +146,7 @@ class Trict(UserDict):
                 }
 
             strict:
-                bool, If True, throws on unfound mapping (passed to self.get_by_list).
+                bool, If True, throws on unfound mapping (passed to self.get_by_seq).
                 Default False - returns None instead.
 
         returns:
@@ -155,7 +155,7 @@ class Trict(UserDict):
             }
         """
         self.data = {
-            k: self.get_by_list(
+            k: self.get_by_seq(
                 v, 
                 strict=strict
             ) for k, v in mapper_dict.items()
