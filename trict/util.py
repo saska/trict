@@ -119,7 +119,7 @@ def leaves(d, prev=[]):
         ]
     """
     for k, v in d.items():
-        new_k = [k] if prev == [] else prev + [k]
+        new_k = prev + [k]
         if isinstance(v, dict):
             yield from leaves(v, prev=new_k)
         else:
@@ -169,7 +169,7 @@ def traverse(d, keys_only=False, prev=[]):
 
     """
     for k, v in d.items():
-        new_k = [k] if prev == [] else prev + [k]
+        new_k = prev + [k]
         if keys_only:
             yield new_k
         else:
