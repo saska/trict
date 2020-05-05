@@ -125,4 +125,4 @@ If you're more of the "I need to make sure my API can handle most anything throw
 }
 ```
 
-Similar functionality can be found in `get_by_list` which also takes [str or sequence] and returns val if any of those keys exists.
+Similar functionality can be found in `get_by_seq` which also takes [str or sequence] and returns val if any of those keys exists.
