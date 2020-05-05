@@ -133,21 +133,23 @@ def test_trict_contains():
     ]:
         assert key not in tr
 
-def test_key_to_list_lists():
+def test_key_to_seq():
     tr = Trict({})
-    assert tr.key_to_list('i.j.k') == ['i', 'j', 'k']
+    assert tr.key_to_seq('i.j.k') == ['i', 'j', 'k']
+    assert tr.key_to_seq(['i', 'j']) == ['i', 'j']
+    assert tr.key_to_seq(('i', 'j')) == ('i', 'j')
 
-def test_get_by_list_finds():
+def test_get_by_seq_finds():
     tr = Trict(base_dict())
     old_data = copy.deepcopy(tr.data)
-    val = tr.get_by_list([
+    val = tr.get_by_seq([
         'user.misinformation.attribute',
         'nonuser.noninformation.nonattribute',
         ['user', 'information', 'attribute']
     ]) 
     assert val == 'infonugget'
     assert tr.data == old_data
-    val = tr.get_by_list([
+    val = tr.get_by_seq([
         ['user', 'information', 'whatattribute'],
         ['user', 'information', 'nonattribute'],
         'user.information.another_attribute'
@@ -155,18 +157,18 @@ def test_get_by_list_finds():
     assert val == 'secondnugget'
     assert tr.data == old_data
 
-def test_strict_get_by_list_throws():
+def test_strict_get_by_seq_throws():
     tr = Trict(base_dict())
     with pytest.raises(KeyError):
-        tr.get_by_list([
+        tr.get_by_seq([
             'none.of.these',
             'i.mean.none',
             ['keys', 'exist']
         ], strict=True)
 
-def test_nonstrict_get_by_list_not_throws():
+def test_nonstrict_get_by_seq_not_throws():
     tr = Trict(base_dict())
-    val = tr.get_by_list([
+    val = tr.get_by_seq([
             'none.of.these',
             'i.mean.none',
             ['keys', 'exist']
