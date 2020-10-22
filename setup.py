@@ -3,7 +3,7 @@ from setuptools import setup
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
 
-version = '0.1.5'
+version = '0.1.6'
 
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
@@ -18,7 +18,7 @@ setup(
   long_description_content_type='text/markdown',
   author = 'Saska Karsi',
   author_email = 'saska.karsi@gmail.com',
-  url = 'https://github.com/saskakarsi/trict',
+  url = 'https://github.com/saska/trict',
   keywords = ['mapping', 'map', 'dictionary', 'recursive', 'dict'],
   install_requires=[],
   classifiers=[
